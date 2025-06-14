@@ -18,3 +18,97 @@
     </p>
   </body>
 </html>
+<h2>Endpoint Details</h2>
+
+<h3>GET /movies</h3>
+<p>Returns a list of all movies in the database.</p>
+<p><strong>Method:</strong> GET</p>
+<p><strong>Response:</strong></p>
+<pre>
+[
+  {
+    "title": "The Matrix",
+    "year": 1999
+  },
+  ...
+]</pre
+>
+
+<h3>GET /movies/:title</h3>
+<p>Returns a single movie by title.</p>
+<p><strong>Example:</strong> /movies/Jumanji</p>
+<p><strong>Method:</strong> GET</p>
+<p><strong>Response:</strong></p>
+<pre>
+{
+  "title": "Jumanji",
+  "year": 1995
+}</pre
+>
+
+<h3>GET /genres/:genreName</h3>
+<p>Returns a genre by name.</p>
+<p><strong>Example:</strong> /genres/Thriller</p>
+<p><strong>Method:</strong> GET</p>
+<p><strong>Response:</strong></p>
+<pre>
+{
+  "name": "Thriller",
+  "description": "Suspenseful plots with twists and tension"
+}</pre
+>
+
+<h3>GET /directors/:directorName</h3>
+<p>Returns director data by name.</p>
+<p><strong>Example:</strong> /directors/Quentin Tarantino</p>
+<p><strong>Method:</strong> GET</p>
+<p><strong>Response:</strong></p>
+<pre>
+{
+  "name": "Quentin Tarantino",
+  "bio": "Known for stylized storytelling and nonlinear plots.",
+  "birthYear": 1963
+}</pre
+>
+
+<h3>POST /users</h3>
+<p>Registers a new user.</p>
+<p><strong>Method:</strong> POST</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "username": "roy",
+  "email": "roy@royj.dev"
+}</pre
+>
+<p><strong>Response:</strong> New user registered</p>
+
+<h3>PUT /users/:username</h3>
+<p>Updates a user's info.</p>
+<p><strong>Example:</strong> /users/roy</p>
+<p><strong>Method:</strong> PUT</p>
+<p><strong>Request Body:</strong></p>
+<pre>
+{
+  "username": "roy_updated"
+}</pre
+>
+<p><strong>Response:</strong> Updated info for user: roy</p>
+
+<h3>POST /users/:username/movies/:movieId</h3>
+<p>Adds a movie to a user's favorites.</p>
+<p><strong>Method:</strong> POST</p>
+<p><strong>Example:</strong> /users/roy/movies/12345</p>
+<p><strong>Response:</strong> Added movie 12345 to roy's favorites</p>
+
+<h3>DELETE /users/:username/movies/:movieId</h3>
+<p>Removes a movie from a user's favorites.</p>
+<p><strong>Method:</strong> DELETE</p>
+<p><strong>Example:</strong> /users/roy/movies/12345</p>
+<p><strong>Response:</strong> Removed movie 12345 from roy's favorites</p>
+
+<h3>DELETE /users/:username</h3>
+<p>Deregisters an existing user.</p>
+<p><strong>Method:</strong> DELETE</p>
+<p><strong>Example:</strong> /users/roy</p>
+<p><strong>Response:</strong> Deleted user: roy</p>

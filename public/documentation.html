@@ -10,3 +10,62 @@
     <p>This API lets users retrieve data about top movies.</p>
   </body>
 </html>
+
+<h2>API Endpoints</h2>
+
+<table border="1" cellpadding="8" cellspacing="0">
+  <thead>
+    <tr>
+      <th>Request</th>
+      <th>URL</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>GET</td>
+      <td>/movies</td>
+      <td>Returns a list of all movies</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/movies/:title</td>
+      <td>Returns data about a single movie by title</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/genres/:genreName</td>
+      <td>Returns data about a genre by name</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/directors/:directorName</td>
+      <td>Returns data about a director by name</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/users</td>
+      <td>Allows a new user to register</td>
+    </tr>
+    <tr>
+      <td>PUT</td>
+      <td>/users/:username</td>
+      <td>Allows a user to update their information</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/users/:username/movies/:movieId</td>
+      <td>Adds a movie to a user's list of favorites</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/users/:username/movies/:movieId</td>
+      <td>Removes a movie from a user's list of favorites</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/users/:username</td>
+      <td>Deregisters an existing user</td>
+    </tr>
+  </tbody>
+</table>
