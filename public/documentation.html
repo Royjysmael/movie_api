@@ -3,69 +3,73 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Roy's Movie API Documentation</title>
+    <title>Roy's 90s Movie API - Documentation</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Welcome to Roy's Movie API</h1>
-    <p>This API lets users retrieve data about top movies.</p>
+    <h1>Roy's 90s Movie API</h1>
+    <p>This RESTful API lets you explore iconic films from the 1990s.</p>
+    <p>
+      Built with Node.js and MongoDB. This documentation outlines all available
+      endpoints.
+    </p>
+
+    <h2>API Endpoints</h2>
+    <table border="1" cellpadding="8" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>Endpoint</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>GET</td>
+          <td>/movies</td>
+          <td>Returns all movies</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/movies/:title</td>
+          <td>Returns a single movie by title</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/genres/:genreName</td>
+          <td>Returns a genre by name</td>
+        </tr>
+        <tr>
+          <td>GET</td>
+          <td>/directors/:directorName</td>
+          <td>Returns a director by name</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users</td>
+          <td>Registers a new user</td>
+        </tr>
+        <tr>
+          <td>PUT</td>
+          <td>/users/:username</td>
+          <td>Updates a user's info</td>
+        </tr>
+        <tr>
+          <td>POST</td>
+          <td>/users/:username/movies/:movieId</td>
+          <td>Adds a movie to user's favorites</td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:username/movies/:movieId</td>
+          <td>Removes a movie from favorites</td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>/users/:username</td>
+          <td>Deletes a user account</td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>
-
-<h2>API Endpoints</h2>
-
-<table border="1" cellpadding="8" cellspacing="0">
-  <thead>
-    <tr>
-      <th>Request</th>
-      <th>URL</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>GET</td>
-      <td>/movies</td>
-      <td>Returns a list of all movies</td>
-    </tr>
-    <tr>
-      <td>GET</td>
-      <td>/movies/:title</td>
-      <td>Returns data about a single movie by title</td>
-    </tr>
-    <tr>
-      <td>GET</td>
-      <td>/genres/:genreName</td>
-      <td>Returns data about a genre by name</td>
-    </tr>
-    <tr>
-      <td>GET</td>
-      <td>/directors/:directorName</td>
-      <td>Returns data about a director by name</td>
-    </tr>
-    <tr>
-      <td>POST</td>
-      <td>/users</td>
-      <td>Allows a new user to register</td>
-    </tr>
-    <tr>
-      <td>PUT</td>
-      <td>/users/:username</td>
-      <td>Allows a user to update their information</td>
-    </tr>
-    <tr>
-      <td>POST</td>
-      <td>/users/:username/movies/:movieId</td>
-      <td>Adds a movie to a user's list of favorites</td>
-    </tr>
-    <tr>
-      <td>DELETE</td>
-      <td>/users/:username/movies/:movieId</td>
-      <td>Removes a movie from a user's list of favorites</td>
-    </tr>
-    <tr>
-      <td>DELETE</td>
-      <td>/users/:username</td>
-      <td>Deregisters an existing user</td>
-    </tr>
-  </tbody>
-</table>

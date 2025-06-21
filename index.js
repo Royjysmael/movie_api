@@ -1,211 +1,220 @@
+const { userSchema } = require("./validation");
 const express = require("express");
 const morgan = require("morgan");
+
+const mongoose = require("mongoose");
+const Models = require("./models.js");
+
+const Movies = Models.Movie;
+const Users = Models.User;
 
 const app = express();
 const port = 8080;
 
+app.use(express.json());
 app.use(express.static("public"));
 app.use(morgan("common"));
 
-const genres = [
-  {
-    name: "Action",
-    description: "Fast-paced movies with lots of physical activity",
-  },
-  {
-    name: "Adventure",
-    description: "Exciting stories with exploration or travel",
-  },
-  { name: "Drama", description: "Serious storytelling with emotional themes" },
-  { name: "Comedy", description: "Movies designed to make you laugh" },
-  {
-    name: "Thriller",
-    description: "Suspenseful plots with twists and tension",
-  },
-];
-
-const movies = [
-  { title: "The Matrix", year: 1999 },
-  { title: "Pulp Fiction", year: 1994 },
-  { title: "Fight Club", year: 1999 },
-  { title: "Back to the Future Part III", year: 1990 },
-  { title: "Teenage Mutant Ninja Turtles", year: 1990 },
-  { title: "The Sandlot", year: 1993 },
-  { title: "Terminator 2 Judgment Day", year: 1991 },
-  { title: "Independence Day", year: 1996 },
-  { title: "Jurassic Park", year: 1993 },
-  { title: "Saving Private Ryan", year: 1998 },
-  { title: "The Fifth Element", year: 1997 },
-  { title: "Adam's Family Values", year: 1993 },
-  { title: "Space Jams", year: 1996 },
-  { title: "The Lion King", year: 1994 },
-  { title: "The Mighty Ducks", year: 1992 },
-  { title: "Richie Rich", year: 1994 },
-  { title: "The Flintstones", year: 1994 },
-  { title: "Aladdin", year: 1992 },
-  { title: "Toy Story", year: 1995 },
-  { title: "Jumanji", year: 1995 },
-];
-
-const directors = [
-  {
-    name: "Lana & Lilly Wachowski",
-    bio: "Directed The Matrix trilogy.",
-    birthYear: 1965,
-  },
-  {
-    name: "Quentin Tarantino",
-    bio: "Known for stylized storytelling and nonlinear plots.",
-    birthYear: 1963,
-  },
-  {
-    name: "David Fincher",
-    bio: "Directed Fight Club, Se7en, and Gone Girl.",
-    birthYear: 1962,
-  },
-  {
-    name: "Robert Zemeckis",
-    bio: "Directed Back to the Future, Forrest Gump.",
-    birthYear: 1952,
-  },
-  {
-    name: "Steve Barron",
-    bio: "Directed Teenage Mutant Ninja Turtles (1990).",
-    birthYear: 1956,
-  },
-  {
-    name: "David Mickey Evans",
-    bio: "Known for directing The Sandlot.",
-    birthYear: 1962,
-  },
-  {
-    name: "James Cameron",
-    bio: "Directed Terminator 2, Titanic, Avatar.",
-    birthYear: 1954,
-  },
-  {
-    name: "Roland Emmerich",
-    bio: "Famous for Independence Day and disaster films.",
-    birthYear: 1955,
-  },
-  {
-    name: "Steven Spielberg",
-    bio: "Legendary director of Jurassic Park and Saving Private Ryan.",
-    birthYear: 1946,
-  },
-  {
-    name: "Luc Besson",
-    bio: "French director known for The Fifth Element.",
-    birthYear: 1959,
-  },
-  {
-    name: "Barry Sonnenfeld",
-    bio: "Directed Addams Family Values, Men in Black.",
-    birthYear: 1953,
-  },
-  { name: "Joe Pytka", bio: "Directed Space Jam (1996).", birthYear: 1938 },
-  {
-    name: "Roger Allers & Rob Minkoff",
-    bio: "Co-directed The Lion King.",
-    birthYear: 1953,
-  },
-  {
-    name: "Stephen Herek",
-    bio: "Directed The Mighty Ducks, Bill & Ted’s Excellent Adventure.",
-    birthYear: 1958,
-  },
-  {
-    name: "Donald Petrie",
-    bio: "Directed Richie Rich and Miss Congeniality.",
-    birthYear: 1954,
-  },
-  {
-    name: "Brian Levant",
-    bio: "Directed The Flintstones, Jingle All the Way.",
-    birthYear: 1952,
-  },
-  {
-    name: "Ron Clements & John Musker",
-    bio: "Co-directed Aladdin, Moana, and more.",
-    birthYear: 1953,
-  },
-  {
-    name: "John Lasseter",
-    bio: "Directed Toy Story, Cars, A Bug’s Life.",
-    birthYear: 1957,
-  },
-  {
-    name: "Joe Johnston",
-    bio: "Directed Jumanji, The Rocketeer, and Captain America: The First Avenger.",
-    birthYear: 1950,
-  },
-];
+mongoose.connect("mongodb://localhost:27017/movieAPI", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome to Roy's Movie API!");
 });
 
-app.get("/movies", (req, res) => {
-  res.json(movies);
+app.get("/movies", async (req, res) => {
+  await Movies.find()
+    .then((movies) => {
+      res.status(200).json(movies);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.get("/movies/:title", (req, res) => {
-  const requestedTitle = req.params.title.toLowerCase();
+app.get("/movies/:title", async (req, res) => {
+  await Movies.findOne({ Title: req.params.title })
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie);
+      } else {
+        res.status(404).send("Movie not found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
 
-  const movie = movies.find((m) => m.title.toLowerCase() === requestedTitle);
+app.get("/genres/:genreName", async (req, res) => {
+  await Movies.findOne({ "Genre.Name": req.params.genreName })
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie.Genre);
+      } else {
+        res.status(404).send("Genre not found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
 
-  if (movie) {
-    res.json(movie);
-  } else {
-    console.log("Movie not found:", requestedTitle);
-    res.status(404).send("Movie not found");
+app.get("/directors/:directorName", async (req, res) => {
+  await Movies.findOne({ "Director.Name": req.params.directorName })
+    .then((movie) => {
+      if (movie) {
+        res.status(200).json(movie.Director);
+      } else {
+        res.status(404).send("Director not found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
+});
+
+app.post("/users", async (req, res) => {
+  // Validate user input
+  const { error } = userSchema.validate(req.body);
+
+  if (error) {
+    return res
+      .status(400)
+      .send(`Validation error: ${error.details[0].message}`);
   }
+
+  // Check for existing user
+  await Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(req.body.Username + " already exists");
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((newUser) => {
+            res.status(201).json(newUser);
+          })
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error: " + err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.get("/genres/:genreName", (req, res) => {
-  const genreName = req.params.genreName.toLowerCase();
-  const genre = genres.find((g) => g.name.toLowerCase() === genreName);
+app.put("/users/:username", async (req, res) => {
+  const { error } = userSchema.validate(req.body);
 
-  if (genre) {
-    res.json(genre);
-  } else {
-    res.status(404).send("Genre not found");
+  if (error) {
+    return res
+      .status(400)
+      .send(`Validation error: ${error.details[0].message}`);
   }
+
+  await Users.findOneAndUpdate(
+    { Username: req.params.username },
+    {
+      $set: {
+        Username: req.body.Username,
+        Password: req.body.Password,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      },
+    },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      if (!updatedUser) {
+        return res.status(404).send("User not found");
+      }
+      res.status(200).json(updatedUser);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.get("/directors/:directorName", (req, res) => {
-  const directorName = req.params.directorName.toLowerCase();
-  const director = directors.find((d) => d.name.toLowerCase() === directorName);
+app.post("/users", async (req, res) => {
+  const { error } = userSchema.validate(req.body);
 
-  if (director) {
-    res.json(director);
-  } else {
-    res.status(404).send("Director not found");
+  if (error) {
+    return res
+      .status(400)
+      .send(`Validation error: ${error.details[0].message}`);
   }
+
+  await Users.findOne({ Username: req.body.Username })
+    .then((user) => {
+      if (user) {
+        return res.status(400).send(`${req.body.Username} already exists`);
+      } else {
+        Users.create({
+          Username: req.body.Username,
+          Password: req.body.Password,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        })
+          .then((newUser) => res.status(201).json(newUser))
+          .catch((err) => {
+            console.error(err);
+            res.status(500).send("Error: " + err);
+          });
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.post("/users", (req, res) => {
-  res.send("New user registered");
+app.delete("/users/:username/movies/:movieId", async (req, res) => {
+  await Users.findOneAndUpdate(
+    { Username: req.params.username },
+    { $pull: { FavoriteMovies: req.params.movieId } },
+    { new: true }
+  )
+    .then((updatedUser) => {
+      if (updatedUser) {
+        res.status(200).json(updatedUser);
+      } else {
+        res.status(404).send("User not found");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
-app.put("/users/:username", (req, res) => {
-  res.send(`Updated info for user: ${req.params.username}`);
-});
-
-app.post("/users/:username/movies/:movieId", (req, res) => {
-  res.send(
-    `Added movie ${req.params.movieId} to ${req.params.username}'s favorites`
-  );
-});
-
-app.delete("/users/:username/movies/:movieId", (req, res) => {
-  res.send(
-    `Removed movie ${req.params.movieId} from ${req.params.username}'s favorites`
-  );
-});
-
-app.delete("/users/:username", (req, res) => {
-  res.send(`Deleted user: ${req.params.username}`);
+app.delete("/users/:username", async (req, res) => {
+  await Users.findOneAndDelete({ Username: req.params.username })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send(req.params.username + " was not found");
+      } else {
+        res.status(200).send(req.params.username + " was deleted.");
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error: " + err);
+    });
 });
 
 // Start the server
