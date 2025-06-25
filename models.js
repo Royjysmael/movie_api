@@ -40,6 +40,10 @@ userSchema.methods.validatePassword = function (password) {
   return bcrypt.compare(password, this.Password);
 };
 
+userSchema.statics.hashPassword = (password) => {
+  return bcrypt.hashSync(password, 10);
+};
+
 const Movie = mongoose.model("Movie", movieSchema);
 const User = mongoose.model("User", userSchema);
 const Director = mongoose.model("Director", directorSchema);

@@ -1,5 +1,4 @@
-const { userSchema } = require("./validation");
-
+const { check, validationResult } = require("express-validator");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
@@ -13,11 +12,13 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 const app = express();
-const port = 8080;
 
 app.use(express.json());
 app.use(express.static("public"));
 app.use(morgan("common"));
+const cors = require("cors");
+
+app.use(cors());
 
 let auth = require("./auth")(app);
 
@@ -148,46 +149,64 @@ app.get(
     }
   }
 );
+app.post(
+  "/users",
+  [
+    check("Username", "Username is required").isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username contains non-alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("Password", "Password is required").not().isEmpty(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
 
-app.post("/users", async (req, res) => {
-  const { error } = userSchema.validate(req.body);
-  if (error) {
-    return res
-      .status(400)
-      .send(`Validation error: ${error.details[0].message}`);
-  }
-
-  try {
-    const existingUser = await Users.findOne({ Username: req.body.Username });
-    if (existingUser) {
-      return res.status(400).send(req.body.Username + " already exists");
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.Password, 10);
+    const hashedPassword = Users.hashPassword(req.body.Password);
 
-    const newUser = await Users.create({
-      Username: req.body.Username,
-      Password: hashedPassword,
-      Email: req.body.Email,
-      Birthday: req.body.Birthday,
-    });
+    try {
+      const existingUser = await Users.findOne({ Username: req.body.Username });
 
-    res.status(201).json(newUser);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error: " + err);
+      if (existingUser) {
+        return res.status(400).send(req.body.Username + " already exists");
+      }
+
+      const newUser = await Users.create({
+        Username: req.body.Username,
+        Password: hashedPassword,
+        Email: req.body.Email,
+        Birthday: req.body.Birthday,
+      });
+
+      res.status(201).json(newUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    }
   }
-});
+);
 
 app.put(
   "/users/:username",
+  [
+    check("Username", "Username is required").isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username contains non-alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+    check("Birthday", "Birthday must be a valid date").optional().isISO8601(),
+  ],
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
-    const { error } = userSchema.validate(req.body);
-    if (error) {
-      return res
-        .status(400)
-        .send(`Validation error: ${error.details[0].message}`);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
     }
 
     try {
@@ -297,11 +316,12 @@ app.delete(
 );
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${8080}`);
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port " + port);
 });
 
-// Error-handling middleware
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Uh Oh! It's Broken. Please try again later.");
