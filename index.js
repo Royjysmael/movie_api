@@ -41,11 +41,7 @@ app.get(
 );
 
 mongoose.connect(
-  "mongodb+srv://royj:jandru003@royflixdb.cwdk0od.mongodb.net/movieAPI?retryWrites=true&w=majority&appName=RoyFlixDB",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
+  "mongodb+srv://royj:jandru003@royflixdb.cwdk0od.mongodb.net/myFlixDB?retryWrites=true&w=majority&appName=RoyFlixDB"
 );
 
 app.get("/", (req, res) => {
