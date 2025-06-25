@@ -40,9 +40,10 @@ app.get(
   }
 );
 
-mongoose.connect(
-  "mongodb+srv://royj:jandru003@royflixdb.cwdk0od.mongodb.net/myFlixDB?retryWrites=true&w=majority&appName=RoyFlixDB"
-);
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 app.get("/", (req, res) => {
   res.send("Welcome to Roy's Movie API!");
