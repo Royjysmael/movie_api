@@ -40,10 +40,13 @@ app.get(
   }
 );
 
-mongoose.connect("mongodb://localhost:27017/movieAPI", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  "mongodb+srv://royj:jandru003@royflixdb.cwdk0od.mongodb.net/movieAPI?retryWrites=true&w=majority&appName=RoyFlixDB",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+);
 
 app.get("/", (req, res) => {
   res.send("Welcome to Roy's Movie API!");
