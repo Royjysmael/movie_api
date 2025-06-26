@@ -4,7 +4,7 @@ A RESTful API built with Node.js and Express that serves data about 90s movies. 
 
 ---
 
-## 🚀 Live App
+## Live App
 
 🔗 [Deployed on Heroku](https://warm-caverns-66338-031442530e4c.herokuapp.com/)
 
@@ -36,9 +36,9 @@ A RESTful API built with Node.js and Express that serves data about 90s movies. 
 ---
 
 <details>
-  <summary>📸 API Test Screenshots (click to expand)</summary>
+  <summary>API Test Screenshots (click to expand)</summary>
 
-## 📸 Screenshots
+## Screenshots
 
 ### 📝 1. User Registration
 
@@ -47,40 +47,40 @@ Registers a new user with hashed password and validated input.
 
 ---
 
-### 🔐 2. User Login
+### 2. User Login
 
 Logs in an existing user and returns a valid JWT token.
 ![User Login](./images/user_login.png)
 
 ---
 
-### ⭐ 3. Add Favorite Movie
+### 3. Add Favorite Movie
 
 Adds a movie to the user's list of favorites.
 ![Add Favorite](./images/user_favorite.png)
 
 ---
 
-### ❌ 4. Delete Favorite Movie
+### 4. Delete Favorite Movie
 
 Removes a movie from the user's favorites list.
 ![Delete Favorite](./images/user_favDelete.png)
 
 ---
 
-### 🛠️ 5. Update User
+### 5. Update User
 
 Updates user information (email, password, etc.).
 ![Update User](./images/user_update.png)
 
-### 🗑️ 6. Delete User
+### 6. Delete User
 
 Deletes the user account from the database.
 ![Delete User](./images/user_delete.png)
 
 ---
 
-### 🎬 7. Get All Movies
+### 7. Get All Movies
 
 Fetches the full list of 90s movies (requires auth token).
 ![Get All Movies](./images/movies_get.png)
@@ -89,7 +89,7 @@ Fetches the full list of 90s movies (requires auth token).
 
 ---
 
-## 📚 API Endpoints
+## API Endpoints
 
 | Method | Endpoint           | Description                            |
 | ------ | ------------------ | -------------------------------------- |
@@ -102,13 +102,13 @@ Fetches the full list of 90s movies (requires auth token).
 
 ---
 
-## ✅ To Do
+## To Do
 
 - Add test coverage
 - Build front-end UI
 
 ---
 
-## 🧠 Reflection
+## Reflection
 
 This project taught me how to structure an Express API, implement secure authentication, and deploy to Heroku with environment variables. If I could go back, I'd add more automated testing and CI/CD workflows. Overall, it gave me confidence to build more full-stack applications in the future.
