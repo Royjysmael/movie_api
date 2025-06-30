@@ -1,9 +1,9 @@
+require("dotenv").config();
 const { check, validationResult } = require("express-validator");
 const express = require("express");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-
 const Models = require("./models.js");
 const passport = require("passport");
 require("./passport");
@@ -16,34 +16,30 @@ const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 app.use(morgan("common"));
-const cors = require("cors");
 
+const cors = require("cors");
 app.use(cors());
 
 let auth = require("./auth")(app);
 
-app.get(
-  "/movies",
-  passport.authenticate("jwt", { session: false }),
-  async (req, res) => {
-    try {
-      const movies = await Movies.find()
-        .select("-_id -__v")
-        .populate("Director", "-_id -__v")
-        .populate("Actors", "-_id -__v");
-
-      res.status(200).json(movies);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error: " + err);
-    }
+app.get("/movies", async (req, res) => {
+  try {
+    const movies = await Movies.find();
+    res.json(movies);
+  } catch (err) {
+    res.status(500).send(err.message);
   }
-);
-
-mongoose.connect(process.env.CONNECTION_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
 });
+
+console.log("🌐 Connecting to:", process.env.CONNECTION_URI);
+
+mongoose
+  .connect(process.env.CONNECTION_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("✅ Connected to MongoDB"))
+  .catch((err) => console.error("❌ MongoDB connection error:", err));
 
 app.get("/", (req, res) => {
   res.send("Welcome to Roy's Movie API!");
